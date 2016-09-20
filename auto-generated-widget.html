@@ -2276,6 +2276,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
             
             console.info("#### onRefresh2nd P15 ####");
             if (this.activeLayer == 'Bottom' && this.flipTheBoard == true) {  //If bottom layer flip board
+                console.info("#### onRefresh2nd P15.1 ####");
 	            for (var path1Ctr = 0; path1Ctr < paths.length; path1Ctr++) {
 	                var path1 = paths[path1Ctr];
 	                for (var i = 0; i < path1.length; i++) {
@@ -2284,14 +2285,51 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
 	                    {
 				            // TODO: #####  mirror path if flag active ....
 				            // simply multiply all x-coords wit -1
+                console.info("#### Moving point ("+ pt.X + "," + pt.Y + ")" );
 					           pt.X = -pt.X;
+                console.info("#### to           ("+ pt.X + "," + pt.Y + ")");
 				            // End of mirror
 	                    }
 	                }
 	            }
             }
 
-            console.info("#### onRefresh2nd P16 ####");
+            console.info("#### onRefresh2nd P16.1 ####");
+var xmin = 1000;
+var ymin = 1000;
+var xmax = -1000;
+var ymax = -1000;
+	            for (var path1Ctr = 0; path1Ctr < paths.length; path1Ctr++) {
+	                var path1 = paths[path1Ctr];
+	                for (var i = 0; i < path1.length; i++) {
+	                    var pt = path1[i];
+	                    if (pt )
+	                    {
+	                      if(xmin > pt.X) xmin = pt.X;
+	                      if(ymin > pt.Y) ymin = pt.Y;
+	                      if(xmax < pt.X) xmax = pt.X;
+	                      if(ymax < pt.Y) ymax = pt.Y;
+	                    }
+	                }
+	            }
+             
+            console.info("#### onRefresh2nd P16.2 ####");
+            console.info("#### Moving board ("+ - xmin + "," + - ymin + ")" );
+	            for (var path1Ctr = 0; path1Ctr < paths.length; path1Ctr++) {
+	                var path1 = paths[path1Ctr];
+	                for (var i = 0; i < path1.length; i++) {
+	                    var pt = path1[i];
+	                    if (pt )
+	                    {
+	                      pt.X = pt.X - xmin;
+	                      pt.Y = pt.Y - ymin;
+	                    }
+	                }
+	            }
+
+
+
+            console.info("#### onRefresh2nd P-End ####");
             // remove redundant paths
             this.debugZ = 2;
             //paths = this.redundantPathRemoval(paths);
