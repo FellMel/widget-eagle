@@ -1477,6 +1477,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
             });
         },
         onRefresh: function(event, callback) {
+            console.info("#### onRefresh ####");
             
             console.log("onRefresh. event:", event);
             
@@ -1504,6 +1505,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
         },
         threePathEndMill: [],
         onRefresh2nd: function(event, callback) {
+            console.info("#### onRefresh2nd ####");
             
             this.inflateMillPathBy = parseFloat($('#com-chilipeppr-widget-eagle .inflate-by').val());
             var isMagicWand = $('#com-chilipeppr-widget-eagle .magic-wand-active').is(':checked');
