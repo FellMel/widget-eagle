@@ -2265,15 +2265,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
                     else if (pt.markedForDelete)
                         removedFromMarked++;
                     else
-                    {
-			            // TODO: #####  mirror path if flag active ....
-			            // simply multiply all x-coords wit -1
-			            if (this.activeLayer == 'Bottom' && this.flipTheBoard == true) {  //If bottom layer flip board
-				           pt.X = -pt.X;
-			            }
-			            // End of mirror
-                        newPath1.push(pt);
-                    }
+                         newPath1.push(pt);
                 }
                 if (newPath1.length > 0)
                     newPaths.push(newPath1);
@@ -2283,6 +2275,23 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
             } // end redundant path removal
             
             console.info("#### onRefresh2nd P15 ####");
+            if (this.activeLayer == 'Bottom' && this.flipTheBoard == true) {  //If bottom layer flip board
+	            for (var path1Ctr = 0; path1Ctr < paths.length; path1Ctr++) {
+	                var path1 = paths[path1Ctr];
+	                for (var i = 0; i < path1.length; i++) {
+	                    var pt = path1[i];
+	                    if (pt )
+	                    {
+				            // TODO: #####  mirror path if flag active ....
+				            // simply multiply all x-coords wit -1
+					           pt.X = -pt.X;
+				            // End of mirror
+	                    }
+	                }
+	            }
+            }
+
+            console.info("#### onRefresh2nd P16 ####");
             // remove redundant paths
             this.debugZ = 2;
             //paths = this.redundantPathRemoval(paths);
