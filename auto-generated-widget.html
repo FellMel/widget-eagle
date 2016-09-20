@@ -1542,6 +1542,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
             var inflateViasBy = inflateBy; //0.4;
             var inflatePolysBy = 0;
             
+            console.info("#### onRefresh2nd P1 ####");
             // See if user overrode these (which is only allowed without magic wand)
             if ($('#com-chilipeppr-widget-eagle .use-inflate-smds-by').is(':checked')) {
                 var val = parseFloat($('#com-chilipeppr-widget-eagle .inflate-smds-by').val());
@@ -1572,6 +1573,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
             }
             
             // let's use the new clipperBySignalKey object
+            console.info("#### onRefresh2nd P2 ####");
             var paths = [];
             console.log("this.clipperBySignalKey:", this.clipperBySignalKey);
             var keys = Object.keys(this.clipperBySignalKey);
@@ -1580,6 +1582,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
             // Step 0.8. If user wants to remove undefined SMDs from the path rendering
             // i.e. we'll just not mill them out
             
+            console.info("#### onRefresh2nd P3 ####");
             if ($('#com-chilipeppr-widget-eagle .use-smd-ignoreundefined').is(':checked')) {
 
                 console.log("removing undefined signal smds");                
@@ -1622,6 +1625,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
                 }
             }
             
+            console.info("#### onRefresh2nd P4 ####");
             // Step 0.9. If user wants to clip wires out of SMDs do it at this step
             if ($('#com-chilipeppr-widget-eagle .use-smd-clipwire').is(':checked')) {
                 
@@ -1669,6 +1673,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
             }
 
             
+            console.info("#### onRefresh2nd P5 ####");
             // Step 1. Create a path for each signal that includes wires, pads,
             // smds, and vias
             console.log("doing step 1 of rendering");
@@ -1681,6 +1686,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
                 var signalPathsInflated = [];
                 var signalPathsInflatedHalf = [];
                 
+                 console.info("#### onRefresh2nd P5.1 ####");
                 // add smds (pads without holes)
                 if (signal.smds && signal.smds.length > 0) {
                     
@@ -1710,6 +1716,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
                     }, this);
                 }
 
+                 console.info("#### onRefresh2nd P5.2 ####");
                 // add pads (have holes)
                 if (signal.pads && signal.pads.length > 0) {
                     signal.pads.forEach(function(pad) {    
@@ -1732,6 +1739,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
                     }, this);
                 }
                 
+                 console.info("#### onRefresh2nd P5.3 ####");
                 // add vias
                 if (signal.vias && signal.vias.length > 0) {
                     signal.vias.forEach(function(via) {    
@@ -1754,6 +1762,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
                     }, this);
                 }
 
+                 console.info("#### onRefresh2nd P5.4 ####");
                 // add wires
                 if (signal.wire && signal.wire.clipper.length > 0) {
                     signal.wire.clipper.forEach(function(path) {    
@@ -1790,6 +1799,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
                     }, this);
                 }
                 
+                 console.info("#### onRefresh2nd P5.5 ####");
                 // add this signal path to overall paths
                 var signalPathUnion = this.getUnionOfClipperPaths(signalPaths);
                 signal.path = signalPathUnion;
@@ -1806,6 +1816,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
                 //debugZ += 1;
                 
             }
+            console.info("#### onRefresh2nd P6 ####");
             console.log("new clipperBySignalKey with overallPath:", this.clipperBySignalKey);
             
             
@@ -1826,6 +1837,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
             }
             */
             
+             console.info("#### onRefresh2nd P7 ####");
             // Only do this step if user asked for Magic Wand
             // Step 1.5: Inflate paths with half constraint
             // now do magic wand
@@ -1869,6 +1881,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
             }
             
             
+            console.info("#### onRefresh2nd P8 ####");
             // Step 2. If a signal has a poly, remove from the polys the other paths
             // from step 1. We should actually remove the inflated paths of the
             // step 1 poly. That will leave us with a clipped poly
@@ -1961,6 +1974,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
                 }
             }
 
+            console.info("#### onRefresh2nd P9 ####");
             // Step 2.5: Also clip polys by the dimenions, meaning, don't let any poly
             // go beyond the dimensions of the board.
             for (var i = 0; i < keys.length; i++) {
@@ -1983,6 +1997,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
                 }
             }
             
+            console.info("#### onRefresh2nd P10 ####");
             // Step 3. Now deal with removing smds/pads from the polys
             console.log("doing step 3");
             for (var i = 0; i < keys.length; i++) {
@@ -2086,6 +2101,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
                 }
             }
 
+            console.info("#### onRefresh2nd P11 ####");
             // Dispenser Code to render drops
             // TODO. Need to fire off pubsub so others, like Frank, can inject
             // here. Or, better yet let's get a more generic way of letting 3rd
@@ -2145,6 +2161,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
                 //this.threePathEndMillArr.push(threePath);
             }
             
+            console.info("#### onRefresh2nd P12 ####");
             // Step 5.
             // Now we should have a full signal path for each signal where we
             // have wires,smds,pads, and vias as well as the polygons where the
@@ -2205,6 +2222,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
                 }
             }
 
+            console.info("#### onRefresh2nd P13 ####");
             console.log("doing redundant line ctr");
             var redundantLineCtr = 0;
             for (var path1Ctr = 0; path1Ctr < paths.length; path1Ctr++) {
@@ -2230,6 +2248,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
                     }
                 }
             }
+            console.info("#### onRefresh2nd P14 ####");
             console.log("num of redundantLineCtr:", redundantLineCtr);
             
             // now loop thru and remove points that are nulls
@@ -2263,6 +2282,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
             console.log("removed all null pts. removedPtsCtr:", removedPtsCtr, "removedFromMarked:", removedFromMarked);
             } // end redundant path removal
             
+            console.info("#### onRefresh2nd P15 ####");
             // remove redundant paths
             this.debugZ = 2;
             //paths = this.redundantPathRemoval(paths);
