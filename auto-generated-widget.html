@@ -444,14 +444,15 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
         setupDrillUseBoardDepthCheckboxes: function() {
             $('#com-chilipeppr-widget-eagle .drill-useboarddepth').change(this.onChangeDrillUseBoardDepthCheckbox.bind(this));
             $('#com-chilipeppr-widget-eagle .drill-useboarddepth').prop ("checked", false);  
+            $('#com-chilipeppr-widget-eagle .drill-depth').value(this.drillDepth);
         },
         onChangeDrillUseBoardDepthCheckbox: function() {
             var drillUseboarddepth = $('#com-chilipeppr-widget-eagle .drill-useboarddepth').prop ("checked");
             
             if(drillUseboarddepth){
-                $('#com-chilipeppr-widget-eagle .drill-useboarddepth').prop ("disabled", true);
+                $('#com-chilipeppr-widget-eagle .drill-depth').prop ("disabled", true);
             }else{
-                $('#com-chilipeppr-widget-eagle .drill-useboarddepth').prop ("disabled", false);
+                $('#com-chilipeppr-widget-eagle .drill-depth').prop ("disabled", false);
             }        
         },
                 
