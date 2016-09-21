@@ -444,7 +444,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
         setupDrillUseBoardDepthCheckboxes: function() {
             $('#com-chilipeppr-widget-eagle .drill-useboarddepth').change(this.onChangeDrillUseBoardDepthCheckbox.bind(this));
             $('#com-chilipeppr-widget-eagle .drill-useboarddepth').prop ("checked", false);  
-            $('#com-chilipeppr-widget-eagle .drill-depth').value("1.7");
+            $('#com-chilipeppr-widget-eagle .drill-depth').val(1.7);
         },
         onChangeDrillUseBoardDepthCheckbox: function() {
             var drillUseboarddepth = $('#com-chilipeppr-widget-eagle .drill-useboarddepth').prop ("checked");
@@ -633,6 +633,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
                 console.log("evt:", evt);
                 if(evt.currentTarget.valueAsNumber) // arrow buttons send 2 events
                   that.drillDepth = evt.currentTarget.valueAsNumber;
+                console.info("##### Drill-Depth = " + that.drillDepth);
             });
             el.find('.dimension-mill-diameter').change(function(evt) {
                 console.log("evt:", evt);
