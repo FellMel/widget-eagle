@@ -405,10 +405,12 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
             this.setupLayerToggleDropdown();
             
             this.setupBoardMirrorCheckboxes();
-            
+            this.setupBoardMoveToZerorCheckboxes();
+            this.setupDrillUseBoardDepthCheckboxes();   
 
             console.log(this.name + " done loading.");
         },
+        
         setupBoardMirrorCheckboxes: function() {
             $('#com-chilipeppr-widget-eagle .mirrorLayerY').change(this.onChangeMirrorLayerYCheckbox.bind(this));
             $('#com-chilipeppr-widget-eagle .mirrorLayerY').prop ("checked", false);
@@ -425,7 +427,34 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
             
         },
         
+        setupBoardMoveToZerorCheckboxes: function() {
+            $('#com-chilipeppr-widget-eagle .moveToZero').change(this.onChangeMoveToZeroCheckbox.bind(this));
+            $('#com-chilipeppr-widget-eagle .moveToZero').prop ("checked", false);
+            
+        },
+        onChangeMoveToZeroCheckbox: function() {
+            this.moveToZero = $('#com-chilipeppr-widget-eagle .moveToZero').prop ("checked");
+            
+            console.log ("Move board to zero: " + this.moveToZero );
+            
+            this.clearEagleBrd();
+            this.draw3d();  
+        },
         
+        setupDrillUseBoardDepthCheckboxes: function() {
+            $('#com-chilipeppr-widget-eagle .drill-useboarddepth').change(this.onChangeDrillUseBoardDepthCheckbox.bind(this));
+            $('#com-chilipeppr-widget-eagle .drill-useboarddepth').prop ("checked", false);  
+        },
+        onChangeDrillUseBoardDepthCheckbox: function() {
+            var drillUseboarddepth = $('#com-chilipeppr-widget-eagle .drill-useboarddepth').prop ("checked");
+            
+            if(drillUseboarddepth){
+                $('#com-chilipeppr-widget-eagle .drill-useboarddepth').prop ("disabled", true);
+            }else{
+                $('#com-chilipeppr-widget-eagle .drill-useboarddepth').prop ("disabled", false);
+            }        
+        },
+                
         setupLayerToggleDropdown: function() {
         	$('#com-chilipeppr-widget-eagle .selectLayer').change(this.onChangeLayerToggleDropdown.bind(this));
           //console.log("r0:  ");
@@ -534,6 +563,8 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
         //placeholder, also need to hold which direction to flip board in.  coming soon.
         boardFlipAxis: null,
         
+        // Flag to move board to origin
+        moveToZero: false,
         //defining Three features we frequently utilize.  No need to redefine constantly.  
         
         ThreeAxisX: null,
@@ -1183,12 +1214,13 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
 
             // Drilling, first sort to drill diameter and change tool to first diameter
             g += "(------ MARK VIAS -------)\n";
+            g += "F" + this.feedRatePlunge + "\n"; 
             for ( diameter in this.sortObjByKey(this.drillVias) ){
                 this.drillVias[diameter].forEach(function(dvector){
                      g += "G0 Z" + that.clearanceHeight + "\n";
                      g += "G0 X" + dvector.X + " Y" + dvector.Y   + "\n";
                      g += "G0 Z0.1\n";
-                     g += "G1 Z" + that.depthOfSignalMilling  + "\n";
+                     g += "G1 Z" + that.depthOfSignalMilling + "\n";
                 });
                 g += "G0 Z" + that.clearanceHeight + "\n";
             }
@@ -1203,12 +1235,13 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
 
             // Drilling, first sort to drill diameter and change tool to first diameter
             g += "(------ MARK PADS -------)\n";
+            g += "F" + this.feedRatePlunge + "\n"; 
             for ( diameter in this.sortObjByKey(this.drillPads) ){
                this.drillPads[diameter].forEach(function(dvector){
                      g += "G0 Z" + that.clearanceHeight + "\n";
                      g += "G0 X" + dvector.X + " Y" + dvector.Y   + "\n";
                      g += "G0 Z0.1\n";
-                     g += "G1 Z" + that.depthOfSignalMilling  + "\n";
+                     g += "G1 Z" + that.depthOfSignalMilling + "\n";
                 });
                 g += "G0 Z" + that.clearanceHeight + "\n";
             }
@@ -2294,6 +2327,7 @@ onAddGcode : function(addGcodeCallback, gcodeParts, eagleWidget, helpDesc){
 	            }
             }
 
+// TODO: include holes / cut
             console.info("#### onRefresh2nd P16.1 ####");
 var xmin = 1000;
 var ymin = 1000;
@@ -6160,7 +6194,12 @@ EagleCanvas.prototype.mirrorLayer = function (layerIdx) {
                             <label>
                                 <input type="checkbox" class="mirrorLayerY" checked />Mirror this layer (Bottom only, highly experimental) 
                             </label>
-                        </div>
+                    </div>
+                    <div class="checkbox">
+                            <label>
+                                <input type="checkbox" class="moveToZero" checked />Move board to origin 
+                            </label>
+                    </div>
 
                     <div class="form-group">
                         Inflate Milling Path By
@@ -6327,7 +6366,7 @@ EagleCanvas.prototype.mirrorLayer = function (layerIdx) {
                             </label>
                         </div>
 
-                        Mark holes for drilling
+                         Mark holes for drilling
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" class="drill-markholes" checked> Mark holes for drilling </input>
@@ -6340,7 +6379,7 @@ EagleCanvas.prototype.mirrorLayer = function (layerIdx) {
                             <label>
                                 <input type="checkbox" class="drill-useboarddepth" checked> Use Board Depth </input>
                             </label>
-                        </div>
+                        </div>                       
                         <div class="input-group">
                             <input class="form-control drill-depth" type="number" placeholder="Depth" value="" disabled />
                             <div class="input-group-addon">mm</div>
